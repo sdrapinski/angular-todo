@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { WishItem } from 'src/shared/modules/wishItem';
 
+const filters = [
+  (item: WishItem) => item,
+  (item: WishItem) => !item.isComplete,
+  (item: WishItem) => item.isComplete,
+];
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,25 +18,10 @@ export class AppComponent {
     new WishItem('Get some coffe', true),
   ];
   title = 'wishlist';
-  newWishText = '';
-  listFilter: string = '0';
+
+  listFilter: any = '0';
 
   get visibleItems(): WishItem[] {
-    let value = this.listFilter;
-    if (value === '0') {
-      return this.items;
-    } else if (value === '1') {
-      return this.items.filter((item) => !item.isComplete);
-    } else {
-      return this.items.filter((item) => item.isComplete);
-    }
-  }
-
-  toggleItem(item: WishItem) {
-    item.isComplete = !item.isComplete;
-  }
-  addNewWish() {
-    this.items.push(new WishItem(this.newWishText));
-    this.newWishText = '';
+    return this.items.filter(filters[this.listFilter]);
   }
 }
